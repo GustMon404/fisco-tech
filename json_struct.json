@@ -1,0 +1,104 @@
+{
+  "versao": "",
+  "data_hora": "",
+  "municipio_prefeitura": "",
+  "quem_lancou": "",
+  "info": {
+    "nfse_substituida": "",
+    "outras_informacoes": "",
+    "competencia": "",
+    "regime_tributacao": "",
+    "optante_simples_nacional": "",
+    "incentivo_fiscal": "",
+    "prestador": {
+      "nome_razao": "",
+      "nome_fantasia": "",
+      "cpf_cnpj": "",
+      "inscricao_municipal": "",
+      "telefone": "",
+      "email": "",
+      "endereco": {
+        "logradouro": "",
+        "numero": "",
+        "complemento": "",
+        "bairro": "",
+        "codigo_municipio": "",
+        "uf": "",
+        "cep": ""
+      }
+    },
+    "tomador": {
+      "cpf_cnpj": "",
+      "inscricao_municipal": "",
+      "nif_tomador": "",
+      "razao_social": "",
+      "telefone": "",
+      "email": "",
+      "endereco": {
+        "logradouro": "",
+        "numero": "",
+        "complemento": "",
+        "bairro": "",
+        "codigo_municipio": "",
+        "uf": "",
+        "cep": ""
+      },
+      "endereco_exterior": {
+        "codigo_pais": "",
+        "endereco_completo_exterior": ""
+      }
+    },
+    "intermediario": {
+      "cpf_cnpj": "",
+      "inscricao_municipal": "",
+      "razao_social": "",
+      "codigo_municipio": ""
+    },
+    "rps": {
+      "numero": "",
+      "serie": "",
+      "tipo": "",
+      "numero_substituido": "",
+      "serie_substituido": "",
+      "tipo_substituido": "",
+      "data_emissao": "",
+      "status": ""
+
+
+    },
+    "servico": {
+      "discriminacao": "",
+      "iss_retido": "",
+      "responsavel_retencao": "",
+      "item_lista_servico": "",
+      "codigo_cnae": "",
+      "codigo_tributacao_municipio": "",
+      "codigo_nbs": "",
+      "codigo_municipio": "",
+      "codigo_pais": "",
+      "exibilidade_iss": "",
+      "identificacao_nao_exigibilidade": "",
+      "municipio_incidencia": "",
+      "numero_processo": ""
+    },
+    "valores": {
+      "base_calculo": "",
+      "aliquota": "",
+      "valor_iss": "",
+      "valor_liquido_nfse": "",
+      "valor_servicos": "",
+      "valor_deducoes": "",
+      "valor_pis": "",
+      "valor_cofins": "",
+      "valor_inss": "",
+      "valor_ir": "",
+      "valor_csll": "",
+      "outras_retencoes": "",
+      "valor_total_tributos": "",
+      "valor_iss": "",
+      "aliquota_servico": "",
+      "desconto_incodicionado": "",
+      "desconto_condicionado": ""
+    }
+  }
+}

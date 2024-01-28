@@ -1,0 +1,48 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="1">
+            <item index="0" class="java.lang.String" itemvalue="typing_extensions" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPep8Inspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="E265" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPep8NamingInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="N801" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="str.__sub__" />
+          <option value="app_gerenciamento_contratos.gerenciamento_os.views.*" />
+          <option value="classes_globais.views.unicode" />
+          <option value="app_parametros.parametros_fiscais.p_recibo_fatura.views.modalform2json.fust_funttel.unicode" />
+          <option value="app_financeiro.recibo_fatura.servicos.impressoes.recibo_fatura.dados.unicode" />
+          <option value="app_crm_tarefa.views.*" />
+          <option value="app_comercial.pedido_venda.views.itens_acoes.modal_escolha_estoques.inicializar_escolhas.unicode" />
+          <option value="app_comercial.pedido_procedimento.procedimentos.itens.unicode" />
+          <option value="app_parametros.parametros_fiscais.nfse.views.modalform2json.cnae.unicode" />
+          <option value="app_parametros.parametros_fiscais.nfse.views.modalform2json.sigcorp.unicode" />
+          <option value="app_ti.contratos_ti.views.unicode" />
+          <option value="app_gestao_documental.documentos.views.*" />
+          <option value="app_ti.contratos_ti.services.servico_contrato_ti.*" />
+          <option value="app_comercial.pedido_compra.views.modais.declaracao_importacao.unicode" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
