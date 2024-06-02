@@ -1,14 +1,22 @@
 from django.db import models
 
+from apps.nfse.models.validators import validade_cpf_cnpj
+
 
 class NfseModel(models.Model):
+    class AMBIENTE(models.TextChoices):
+        PRODUCAO = 'PD', 'Produção'
+        HOMOLOGACAO = 'HM', 'Homologação'
+
     versao = models.CharField(max_length=20)
+    ambiente = models.CharField(choices=AMBIENTE.choices, max_length=2)
     data_hora = models.DateTimeField(auto_now_add=True)
 
     # TODO: Adicionar UPPERCASE
     municipio_prefeitura = models.CharField(max_length=50)
     quem_lancou = models.CharField(max_length=30)
-    info = models.OneToOneField('InfoNFseModel', on_delete=models.CASCADE)
+
+    prestador = models.OneToOneField('PrestadorModel', on_delete=models.CASCADE)
 
     class Meta:
         db_table = "nfse"
@@ -31,6 +39,9 @@ class InfoNFseModel(models.Model):
         SIM = 1, 'SIM'
         NAO = 2, 'NÃO'
 
+    nfse = models.ForeignKey('NfseModel', on_delete=models.CASCADE, related_name='infos')
+    numero = models.IntegerField(null=True)
+    codigo_verificao = models.CharField(max_length=9, null=True)
     nfse_substituida = models.IntegerField(null=True, unique=True)
     outras_informacoes = models.CharField(max_length=510, null=True)
     data_emissao = models.DateTimeField(null=True)
@@ -38,9 +49,10 @@ class InfoNFseModel(models.Model):
     regime_tributacao = models.IntegerField(choices=REGIME_TRIBUTACAO.choices, null=True)
     optante_simples_nacional = models.IntegerField(choices=OPTANTE_SIMPLES_NACIONAL.choices)
     incentivo_fiscal = models.IntegerField(choices=INCENTIVO_FISCAL.choices)
-    prestador = models.OneToOneField('PrestadorModel', on_delete=models.CASCADE)
     tomador = models.OneToOneField('TomadorModel', on_delete=models.CASCADE)
     intermediario = models.OneToOneField('IntermediarioModel', null=True, on_delete=models.SET_NULL)
+    construcao_civil = models.OneToOneField('ConstrucaoCivilModel', null=True, on_delete=models.SET_NULL)
+    evento = models.OneToOneField('EventoModel', null=True, on_delete=models.SET_NULL)
     rps = models.OneToOneField('RpsModel', on_delete=models.CASCADE)
     servico = models.OneToOneField('ServicoModel', on_delete=models.CASCADE)
     valores = models.OneToOneField('ValoresModel', on_delete=models.CASCADE)
@@ -73,11 +85,11 @@ class EnderecoExteriorModel(models.Model):
 class PrestadorModel(models.Model):
     nome_razao = models.CharField(max_length=150)
     nome_fantasia = models.CharField(max_length=60, null=True)
-    cpf_cnpj = models.CharField(max_length=14)
+    cpf_cnpj = models.CharField(max_length=14, validators=[validade_cpf_cnpj])
     inscricao_muncipal = models.CharField(max_length=15, null=True)
     telefone = models.CharField(max_length=20, null=True)
     email = models.CharField(max_length=80, null=True)
-    endereco = models.OneToOneField('EnderecoModel', on_delete=models.CASCADE)
+    # endereco = models.OneToOneField('EnderecoModel', on_delete=models.CASCADE)
 
     class Meta:
         db_table = "nfse_prestador"
@@ -93,7 +105,7 @@ class PrestadorModel(models.Model):
 
 class TomadorModel(models.Model):
     razao_social = models.CharField(max_length=150)
-    cpf_cnpj = models.CharField(max_length=14)
+    cpf_cnpj = models.CharField(max_length=14, validators=[validade_cpf_cnpj])
     inscricao_muncipal = models.CharField(max_length=15, null=True)
     nif_tomador = models.CharField(max_length=40, null=True)
     telefone = models.CharField(max_length=20, null=True)
@@ -104,9 +116,17 @@ class TomadorModel(models.Model):
     class Meta:
         db_table = "nfse_tomador"
 
+    @property
+    def cpf(self):
+        return self.cpf_cnpj if len(self.cpf_cnpj) == 11 else ''
+
+    @property
+    def cnpj(self):
+        return self.cpf_cnpj if len(self.cpf_cnpj) == 14 else ''
+
 
 class IntermediarioModel(models.Model):
-    cpf_cnpj = models.CharField(max_length=14, null=True)
+    cpf_cnpj = models.CharField(max_length=14, null=True, validators=[validade_cpf_cnpj])
     inscricao_muncipal = models.CharField(max_length=15, null=True)
     razao_social = models.CharField(max_length=150, null=True)
     codigo_municipio = models.IntegerField(null=True)
@@ -114,6 +134,30 @@ class IntermediarioModel(models.Model):
     class Meta:
         db_table = "nfse_intermediario"
 
+    @property
+    def cpf(self):
+        return self.cpf_cnpj if len(self.cpf_cnpj) == 11 else ''
+
+    @property
+    def cnpj(self):
+        return self.cpf_cnpj if len(self.cpf_cnpj) == 14 else ''
+
+
+class ConstrucaoCivilModel(models.Model):
+    codigo_obra = models.CharField(max_length=30, null=True)
+    art = models.CharField(max_length=30, null=True)
+
+    class Meta:
+        db_table = "nfse_construcao_civil"
+
+
+class EventoModel(models.Model):
+    identificao = models.CharField(max_length=30, null=True)
+    descricao = models.CharField(max_length=255, null=True)
+
+
+    class Meta:
+        db_table = "nfse_evento"
 
 class RpsModel(models.Model):
     class TIPO(models.IntegerChoices):
@@ -194,4 +238,44 @@ class ValoresModel(models.Model):
     desconto_condicionado = models.DecimalField(max_digits=4, decimal_places=2, null=True)
 
     class Meta:
-        db_table = "nfse_model"
+        db_table = "nfse_valores"
+
+
+class FornecedorModel(models.Model):
+    nif_forncedor = models.CharField(max_length=40, null=True)
+    codigo_pais = models.CharField(max_length=4, null=True)
+    cpf_cnpj = models.CharField(max_length=14, validators=[validade_cpf_cnpj])
+
+    class Meta:
+        db_table = "nfse_fornecedor"
+
+
+class DeducaoModel(models.Model):
+    class TipoDeducao(models.IntegerChoices):
+        MATERIAIS = 1, 'Materiais'
+        MAO_DE_OBRA = 2, 'Subempreitada de Mão de Obra'
+        SERVICOS = 3, 'Serviços'
+        PRODUCAO_EXTERNA = 4, 'Produção Externa'
+        ALIMENTACAO = 5, 'Alimentação e Bebidas/Frigobar'
+        REEMBOLSO = 6, 'Reembolso de Despesas'
+        REPASSE_CONSORCIADO = 7, 'Repasse Consorciado'
+        REPASSE_SAUDE = 8, 'Repasse Plano de Saúde'
+        OUTRAS_DEDUCOES = 99, 'Outras Deduções'
+
+    info_nfse = models.ForeignKey('InfoNFseModel', on_delete=models.CASCADE, related_name='deducoes')
+    tipo_deducao = models.IntegerField(choices=TipoDeducao.choices)
+    descricao_deducao = models.CharField(max_length=150, null=True)
+    codigo_municipio_gerador = models.IntegerField(null=True)
+    numero_nfse = models.IntegerField(null=True)
+    codigo_verificacao = models.CharField(max_length=9, null=True)
+    numero_nfe = models.IntegerField(null=True)
+    chave_acesso_nfe = models.IntegerField(null=True)
+    uf_nfe = models.CharField(max_length=2)
+    identificacao_documento = models.CharField(max_length=255, null=True)
+    fornecedor = models.ForeignKey(FornecedorModel, on_delete=models.CASCADE)
+    data_emissao = models.DateField(auto_now_add=True)
+    valor_dedutivel = models.DecimalField(max_digits=15, decimal_places=2)
+    valor_utilizado_deducao = models.DecimalField(max_digits=15, decimal_places=2)
+
+    class Meta:
+        db_table = "nfse_deducao"

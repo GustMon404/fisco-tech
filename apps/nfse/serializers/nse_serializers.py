@@ -49,7 +49,7 @@ class PrestadorSerializer(serializers_drf.WritableNestedModelSerializer):
         model = PrestadorModel
         exclude = ['id']
 
-    endereco = EnderecoSerializer()
+    # endereco = EnderecoSerializer()
 
 
 class RpsSerializer(serializers.ModelSerializer):
@@ -61,9 +61,12 @@ class RpsSerializer(serializers.ModelSerializer):
 class InfoNfseSerializer(serializers_drf.WritableNestedModelSerializer):
     class Meta:
         model = InfoNFseModel
-        exclude = ['id']
+        read_only_fields = ['numero', 'codigo_verificao']
+        exclude = ['id', 'nfse']
+        extra_kwargs = {
+            'nfse': {'required': False}
+        }
 
-    prestador = PrestadorSerializer()
     tomador = TomadorSerializer()
     intermediario = IntermediarioSerializer(required=False)
     rps = RpsSerializer()
@@ -73,9 +76,19 @@ class InfoNfseSerializer(serializers_drf.WritableNestedModelSerializer):
 
 
 class NfseSerializer(serializers_drf.WritableNestedModelSerializer):
+
+    prestador = PrestadorSerializer()
+    infos = InfoNfseSerializer(many=True)
+
     class Meta:
         model = NfseModel
         fields = '__all__'
         read_only_fields = ['data_hora']
 
-    info = InfoNfseSerializer()
+    # def create(self, validated_data):
+    #     info_data = validated_data.pop('info')
+    #     nfse = NfseModel.objects.create(**validated_data)
+    #     for info in info_data:
+    #         InfoNFseModel.objects.create(nfse=nfse, **info_data)
+    #     return nfse
+
